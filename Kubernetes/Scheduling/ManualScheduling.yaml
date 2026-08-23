@@ -1,1 +1,26 @@
+# Manual Scheduling at Creation Time. Assign an Nginx pod directly to node01 during definition.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: manual-nginx
+spec:
+  nodeName: node01
+  containder:
+    - name: nginx
+      image: nginx
 
+# Scheduling an Existing Pending Pod via Binding Object
+# If a pod is already created and stuck in Pending, you cannot simply edit nodeName on the live pod. You must submit a Binding object to the API server.
+# 2.Submit via the API POST request:Use kubectl proxy or curl to send this binding directly to the pod's binding sub-resource endpoint: /api/v1/namespaces/default/pods/stuck-pod/binding.
+{
+    "apiVersion": "v1",
+    "kind": "Binding",
+    "metadata": {
+        "name": "stuck-pod"
+    },
+    "target": {
+        "apiVersion": "v1",
+        "kind": "Node",
+        "name": "node01"
+    }
+}
