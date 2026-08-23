@@ -1,0 +1,27 @@
+# Apply a taint to a node
+#kubectl taint nodes node01 app=blue:NoSchedule
+
+# Remove a taint from a node (note the trailing minus sign)
+#kubectl taint nodes node01 app=blue:NoSchedule-
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: frontend-pod
+  labels:
+    env: production
+spec:
+  containers:
+  - name: nginx
+    image: nginx:alpine
+  tolerations:
+  # Example 1: Exact match using Equal operator
+  - key: "app"
+    operator: "Equal"
+    value: "blue"
+    effect: "NoSchedule"
+  # Example 2: Key existence match using Exists operator (matches any value)
+  - key: "dedicated"
+    operator: "Exists"
+    effect: "NoExecute"
+    tolerationSeconds: 3600 # Optional: stays on node for 1 hr before eviction
