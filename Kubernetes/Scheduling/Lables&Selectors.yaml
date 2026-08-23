@@ -1,0 +1,23 @@
+# Equality-based selector
+selector:
+  component: redis
+
+# Set-based selector (matchExpressions)
+selector:
+  matchExpressions:
+    - {key: tier, operator: In, values: [frontend, middleware]}
+    - {key: environment, operator: NotIn, values: [dev]}
+
+  # Assign a background processing pod to a node specifically equipped with SSD storage.
+  # Apply a custom label to your chosen node using the kubectl CLI. 
+  # kubectl label nodes node1 storage=ssd
+apiVersion: v1
+kind: Pod
+metadata:
+  name: indexer
+spec:
+  containers:
+  - name: indexer
+    image: nginx
+  nodeSelector:
+    storage: ssd
